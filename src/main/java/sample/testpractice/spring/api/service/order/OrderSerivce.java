@@ -23,17 +23,21 @@ public class OrderSerivce {
 
     public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
         List<String> productNumbers = request.getProductNumbers();
+        List<Product> products = findPProductsBy(productNumbers);
+
+        // Order
+        Order order = Order.create(products, registeredDateTime);
+        Order saveOrder = orderRepository.save(order);
+        return OrderResponse.of(saveOrder);
+    }
+
+    private List<Product> findPProductsBy(List<String> productNumbers) {
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
         Map<String, Product> productMap = products.stream()
                 .collect(Collectors.toMap(Product::getProductNumber, p -> p));
 
-        List<Product> duplicationProducts = productNumbers.stream()
+        return productNumbers.stream()
                 .map(productMap::get)
                 .collect(Collectors.toList());
-
-        // Order
-        Order order = Order.create(duplicationProducts, registeredDateTime);
-        Order saveOrder = orderRepository.save(order);
-        return OrderResponse.of(saveOrder);
     }
 }
