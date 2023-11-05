@@ -1,5 +1,6 @@
 package sample.testpractice.spring.api.service.order;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import sample.testpractice.spring.api.controller.order.request.OrderCreateRequest;
 import sample.testpractice.spring.api.service.order.response.OrderResponse;
+import sample.testpractice.spring.domain.order.OrderRepository;
+import sample.testpractice.spring.domain.orderproduct.OrderProductRepository;
 import sample.testpractice.spring.domain.product.Product;
 import sample.testpractice.spring.domain.product.ProductRepository;
 import sample.testpractice.spring.domain.product.ProductSellingStatus;
@@ -28,7 +31,18 @@ class OrderSerivceTest {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private OrderProductRepository orderProductRepository;
+    @Autowired
     private OrderSerivce orderSerivce;
+
+    @AfterEach
+    void tearDown() {
+        orderProductRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+    }
 
     @DisplayName("주문번호 리스트를 받아 주문을 생성한다.")
     @Test
