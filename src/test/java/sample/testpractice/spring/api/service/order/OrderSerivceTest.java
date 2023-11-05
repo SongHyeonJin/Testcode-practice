@@ -42,7 +42,7 @@ class OrderSerivceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderSerivce.createOrder(request);
+        OrderResponse orderResponse = orderSerivce.createOrder(request, LocalDateTime.now());
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
