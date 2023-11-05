@@ -6,6 +6,7 @@ import sample.testpractice.spring.domain.product.Product;
 import sample.testpractice.spring.domain.product.ProductSellingStatus;
 import sample.testpractice.spring.domain.product.ProductType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +24,7 @@ class OrderTest {
         );
 
         // when
-        Order order = Order.create(products);
+        Order order = Order.create(products, LocalDateTime.now());
 
         // then
         assertThat(order.getTotalPrice()).isEqualTo(3000);
@@ -39,10 +40,27 @@ class OrderTest {
         );
 
         // when
-        Order order = Order.create(products);
+        Order order = Order.create(products, LocalDateTime.now());
 
         // then
         assertThat(order.getOrderStatus()).isEqualByComparingTo(OrderStatus.INIT);
+    }
+
+    @DisplayName("주문 생성 시 주문 등록 시간을 기록한다.")
+    @Test
+    void registeredDateTime(){
+        LocalDateTime registerdDateTime = LocalDateTime.now();
+        // given
+        List<Product> products = List.of(
+                createProduct("001", 1000),
+                createProduct("002", 2000)
+        );
+
+        // when
+        Order order = Order.create(products, registerdDateTime);
+
+        // then
+        assertThat(order.getRegisteredDateTime()).isEqualTo(registerdDateTime);
     }
 
     private Product createProduct(String productNumber, int price){
