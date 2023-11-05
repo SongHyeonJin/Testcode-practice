@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import sample.testpractice.spring.api.controller.order.request.OrderCreateRequest;
 import sample.testpractice.spring.api.service.order.response.OrderResponse;
 import sample.testpractice.spring.domain.product.Product;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 //@DataJpaTest
 class OrderSerivceTest {
@@ -32,6 +34,8 @@ class OrderSerivceTest {
     @Test
     void createOrder(){
         // given
+        LocalDateTime registeredDateTime = LocalDateTime.now();
+
         Product product1 = createProduct(ProductType.HANDMADE, "001", 1000);
         Product product2 = createProduct(ProductType.HANDMADE, "002", 3000);
         Product product3 = createProduct(ProductType.HANDMADE, "003", 5000);
@@ -42,13 +46,13 @@ class OrderSerivceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderSerivce.createOrder(request, LocalDateTime.now());
+        OrderResponse orderResponse = orderSerivce.createOrder(request, registeredDateTime);
 
         // then
         assertThat(orderResponse.getId()).isNotNull();
         assertThat(orderResponse)
-                .extracting("registerdDateTime", "totalPrice")
-                .contains(LocalDateTime.now(), 4000);
+                .extracting("registeredDateTime", "totalPrice")
+                .contains(registeredDateTime, 4000);
         assertThat(orderResponse.getProducts()).hasSize(2)
                 .extracting("productNumber", "price")
                 .containsExactlyInAnyOrder(
