@@ -13,6 +13,7 @@ import sample.testpractice.spring.domain.stock.Stock;
 import sample.testpractice.spring.domain.stock.StockRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class OrderSerivce {
                 .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
 
         // 재고 차감 시도
-        for (String stockProductNumber : stockProductNumbers) {
+        for (String stockProductNumber : new HashSet<>(stockProductNumbers)) {
             Stock stock = stockMap.get(stockProductNumber);
             int quantity = productCountingMap.get(stockProductNumber).intValue();
             if(stock.isQuantityLessThan(quantity)){
