@@ -2,6 +2,7 @@ package sample.testpractice.spring.api.controller.product.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import sample.testpractice.spring.domain.product.Product;
 import sample.testpractice.spring.domain.product.ProductSellingStatus;
 import sample.testpractice.spring.domain.product.ProductType;
 
@@ -21,4 +22,13 @@ public class ProductCreateRequest {
         this.price = price;
     }
 
+    public Product toEntity(String nextProductNumber) {
+        return Product.builder()
+                .productNumber(nextProductNumber)
+                .type(type)
+                .sellingStatus(sellingStatus)
+                .name(name)
+                .price(price)
+                .build();
+    }
 }
